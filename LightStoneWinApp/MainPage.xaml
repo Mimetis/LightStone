@@ -1,0 +1,135 @@
+﻿<Page
+    x:Class="LightStoneWinApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LightStoneWinApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:ctrl="using:LightStone.Controls"
+       xmlns:vm="using:LightStoneWinApp"
+ 
+   mc:Ignorable="d">
+    <Page.Resources>
+        <DataTemplate x:Key="TemplateFullScreen">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Source="{Binding BitmapImage}" Width="600" VerticalAlignment="Bottom" 
+                               Stretch="Uniform"></Image>
+
+                <Rectangle Grid.Row="1" Fill="Black" Margin="0,10" ></Rectangle>
+
+                <Image Grid.Row="1" VerticalAlignment="Top" Width="600"  Margin="0,10" 
+                               Source="{Binding BitmapImage}" Stretch="Uniform" 
+                               Opacity="0.1" >
+                    <Image.RenderTransform>
+                        <CompositeTransform ScaleY="1" />
+                    </Image.RenderTransform>
+                    <Image.Projection>
+                        <PlaneProjection RotationX="180"></PlaneProjection>
+                    </Image.Projection>
+                </Image>
+
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="TemplateSnapped">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Image Source="{Binding BitmapImage}" Width="60" VerticalAlignment="Bottom" 
+                               Stretch="Uniform"></Image>
+
+                <Rectangle Grid.Row="1" Fill="Black" Margin="0,10" ></Rectangle>
+
+                <Image Grid.Row="1" VerticalAlignment="Top" Width="60"  Margin="0,10" 
+                               Source="{Binding BitmapImage}" Stretch="Uniform" 
+                               Opacity="0.1" >
+                    <Image.RenderTransform>
+                        <CompositeTransform ScaleY="1" />
+                    </Image.RenderTransform>
+                    <Image.Projection>
+                        <PlaneProjection RotationX="180"></PlaneProjection>
+                    </Image.Projection>
+                </Image>
+
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Page.DataContext>
+        <vm:MainPageViewModel />
+    </Page.DataContext>
+    <Grid Background="{StaticResource ApplicationPageBackgroundThemeBrush}">
+
+        <Border Margin="0" >
+            
+            <ctrl:LightStone ItemsSource="{Binding Datas}" 
+                        SelectedIndex="0"
+                        ItemTemplate="{StaticResource TemplateFullScreen}"
+                        TransitionDuration="300" 
+                        Depth="200" 
+                        MaxVisibleItems="4"
+                        x:Name="LightStoneElement"
+                        Rotation="50" 
+                        TranslateY="280"
+                        TranslateX ="100">
+                <ctrl:LightStone.EasingFunction>
+                    <CubicEase EasingMode="EaseOut" />
+                </ctrl:LightStone.EasingFunction>
+
+            </ctrl:LightStone>
+        </Border>
+
+        <Button Content="Remove" Tag="0" HorizontalAlignment="Left" Margin="0,47,0,0" VerticalAlignment="Top" Height="52" Width="100" Click="Button_Click_1"/>
+        <Button Content="Add" HorizontalAlignment="Left" Margin="118,47,0,0" VerticalAlignment="Top" Height="52" Width="100" Click="AddItemClick"/>
+
+        <StackPanel Orientation="Horizontal" Height="100" HorizontalAlignment="Left" Margin="223,23,-48,0" VerticalAlignment="Top" >
+            <TextBlock Text="Rotation" VerticalAlignment="Center" Margin="10" Style="{StaticResource BaseTextBlockStyle}" ></TextBlock>
+            <Slider HorizontalAlignment="Left" Margin="10" Minimum="-90" Maximum="90" Value="{Binding ElementName=LightStoneElement, Path=Rotation, Mode=TwoWay}" VerticalAlignment="Center" Width="190" Height="40"/>
+            <TextBlock Text="Depth" VerticalAlignment="Center" Margin="10" Style="{StaticResource BaseTextBlockStyle}" ></TextBlock>
+            <Slider HorizontalAlignment="Left" Margin="10" Minimum="-1000" Maximum="1000" Value="{Binding Depth, ElementName=LightStoneElement, Mode=TwoWay}"  VerticalAlignment="Center" Width="190" Height="40"/>
+            <TextBlock Text="TranslateY" VerticalAlignment="Center" Margin="10" Style="{StaticResource BaseTextBlockStyle}" ></TextBlock>
+            <Slider HorizontalAlignment="Left" Margin="10" Minimum="-500" Maximum="500" Value="{Binding TranslateY, ElementName=LightStoneElement, Mode=TwoWay}"  VerticalAlignment="Center" Width="190" Height="40"/>
+            <TextBlock Text="TranslateX" VerticalAlignment="Center" Margin="10" Style="{StaticResource BaseTextBlockStyle}" ></TextBlock>
+            <Slider HorizontalAlignment="Left" Margin="10" Minimum="-1000" Maximum="1000" Value="{Binding TranslateX, ElementName=LightStoneElement, Mode=TwoWay}" VerticalAlignment="Center" Width="190" Height="40"/>
+        </StackPanel>
+
+
+
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="FullScreenLandscape">
+                    <Storyboard >
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightStoneElement" 
+                                                       Storyboard.TargetProperty="ItemTemplate">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TemplateFullScreen}" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+                </VisualState>
+                <VisualState x:Name="Snapped">
+
+
+                    <Storyboard>
+                        <ObjectAnimationUsingKeyFrames Storyboard.TargetName="LightStoneElement" 
+                                                       Storyboard.TargetProperty="ItemTemplate">
+                            <DiscreteObjectKeyFrame KeyTime="0" Value="{StaticResource TemplateSnapped}" />
+                        </ObjectAnimationUsingKeyFrames>
+                    </Storyboard>
+
+
+                    <!-- Untill here  -->
+
+
+
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+    </Grid>
+</Page>
