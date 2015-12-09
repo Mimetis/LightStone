@@ -151,7 +151,7 @@ namespace LightStone.Controls
 
         // Using a DependencyProperty as the backing store for Rotation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RotationProperty =
-            DependencyProperty.Register("Rotation", typeof(Double), typeof(LightStone), new PropertyMetadata(0, OnLightStonePropertyChanged));
+            DependencyProperty.Register("Rotation", typeof(Double), typeof(LightStone), new PropertyMetadata(0d, OnLightStonePropertyChanged));
 
 
         public int MaxVisibleItems
@@ -381,11 +381,13 @@ namespace LightStone.Controls
 
                 // Get an initial projection (without move)
                 var props = GetProjection(i, 0d);
-
-                planeProjection.LocalOffsetX = props.Item1;
-                planeProjection.GlobalOffsetY = props.Item2;
-                planeProjection.GlobalOffsetZ = props.Item3;
-                planeProjection.RotationY = props.Item4;
+                if (!double.IsNaN(props.Item1) && !double.IsNaN(props.Item2) && !double.IsNaN(props.Item3) && !double.IsNaN(props.Item4))
+                {
+                    planeProjection.LocalOffsetX = props.Item1;
+                    planeProjection.GlobalOffsetY = props.Item2;
+                    planeProjection.GlobalOffsetZ = props.Item3;
+                    planeProjection.RotationY = props.Item4;
+                }
 
                 // calculate zindex and opacity
                 int zindex = (this.internalList.Count * 100) - deltaFromSelectedIndex;
@@ -505,10 +507,20 @@ namespace LightStone.Controls
                 // Item already present
                 if (item.Visibility == newVisibility && item.Visibility == Visibility.Visible)
                 {
-                    storyboard.AddAnimation(item, TransitionDuration, props.Item1, "(UIElement.Projection).(PlaneProjection.LocalOffsetX)", this.EasingFunction);
+                    if (!double.IsNaN(props.Item1))
+                    {
+                        storyboard.AddAnimation(item, TransitionDuration, props.Item1, "(UIElement.Projection).(PlaneProjection.LocalOffsetX)", this.EasingFunction);
+                    }
+
                     storyboard.AddAnimation(item, TransitionDuration, props.Item2, "(UIElement.Projection).(PlaneProjection.GlobalOffsetY)", this.EasingFunction);
                     storyboard.AddAnimation(item, TransitionDuration, props.Item3, "(UIElement.Projection).(PlaneProjection.GlobalOffsetZ)", this.EasingFunction);
-                    storyboard.AddAnimation(item, TransitionDuration, props.Item4, "(UIElement.Projection).(PlaneProjection.RotationY)", this.EasingFunction);
+
+                    if (!double.IsNaN(props.Item4))
+                    {
+                        storyboard.AddAnimation(item, TransitionDuration, props.Item4,
+                            "(UIElement.Projection).(PlaneProjection.RotationY)", this.EasingFunction);
+                    }
+
                     storyboard.AddAnimation(item, TransitionDuration, opacity, "Opacity", this.EasingFunction);
                 }
                 else if (newVisibility == Visibility.Visible)
