@@ -151,7 +151,7 @@ namespace LightStone.Controls
 
         // Using a DependencyProperty as the backing store for Rotation.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty RotationProperty =
-            DependencyProperty.Register("Rotation", typeof(Double), typeof(LightStone), new PropertyMetadata(0, OnLightStonePropertyChanged));
+            DependencyProperty.Register("Rotation", typeof(Double), typeof(LightStone), new PropertyMetadata(0d, OnLightStonePropertyChanged));
 
 
         public int MaxVisibleItems
